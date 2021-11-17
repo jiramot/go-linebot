@@ -36,15 +36,23 @@ func main() {
 			if event.Type == linebot.EventTypeMessage {
 				switch message := event.Message.(type) {
 				case *linebot.TextMessage:
-					replyMsg := linebot.NewTextMessage(message.Text)
+
 					if strings.EqualFold(message.Text, "location") {
+						urlAction := linebot.NewURIAction("Share location", "https://line.me/R/nv/location/")
+						template := linebot.NewButtonsTemplate("", "Title", "text", urlAction)
+						replyMsg := linebot.NewTemplateMessage("branch", template)
+						if _, err = bot.ReplyMessage(event.ReplyToken, replyMsg).Do(); err != nil {
+							log.Print(err)
+						}
+					} else {
+						replyMsg := linebot.NewTextMessage(message.Text)
 						locationAction := linebot.NewLocationAction("Share location")
 						quickReplyButton := linebot.NewQuickReplyButton("", locationAction)
 						quickReplyItem := linebot.NewQuickReplyItems(quickReplyButton)
 						replyMsg.WithQuickReplies(quickReplyItem)
-					}
-					if _, err = bot.ReplyMessage(event.ReplyToken, replyMsg).Do(); err != nil {
-						log.Print(err)
+						if _, err = bot.ReplyMessage(event.ReplyToken, replyMsg).Do(); err != nil {
+							log.Print(err)
+						}
 					}
 				case *linebot.LocationMessage:
 					cols := []*linebot.CarouselColumn{}
