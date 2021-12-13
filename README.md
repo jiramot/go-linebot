@@ -1,5 +1,10 @@
 # LineBot
 
+## Edit config
+```
+config.yaml
+```
+
 ## Getting Start
 ```
 go mod tidy
