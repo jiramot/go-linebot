@@ -1,0 +1,5 @@
+line:
+  channel_secret: xx
+  channel_access_token: xx
+server:
+  port: 8080
