@@ -17,7 +17,6 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	e := echo.New()
 	bot, err := linebot.New(config.LineConfig.ChannelSecret, config.LineConfig.ChannelAccessToken)
 	if err != nil {
@@ -55,20 +54,91 @@ func main() {
 						}
 					}
 				case *linebot.LocationMessage:
-					cols := []*linebot.CarouselColumn{}
-					googleAction := linebot.NewURIAction("action", "https://google.com")
+					// cols := []*linebot.CarouselColumn{}
+					// googleAction := linebot.NewURIAction("action", "https://google.com")
+					// for i := 0; i < 10; i++ {
+					// 	col := linebot.CarouselColumn{
+					// 		Title:         fmt.Sprintf("Title %d", i),
+					// 		Text:          fmt.Sprintf("text %d", i),
+					// 		Actions:       []linebot.TemplateAction{googleAction},
+					// 		DefaultAction: googleAction,
+					// 	}
+					// 	cols = append(cols, &col)
+					// }
+					// template := linebot.NewCarouselTemplate(cols...)
+					// replyMsg := linebot.NewTemplateMessage("branch", template)
+					// if _, err = bot.ReplyMessage(event.ReplyToken, replyMsg).Do(); err != nil {
+					// 	log.Print(err)
+					// }
+
+					var contents []*linebot.BubbleContainer
 					for i := 0; i < 10; i++ {
-						col := linebot.CarouselColumn{
-							Title:         fmt.Sprintf("Title %d", i),
-							Text:          fmt.Sprintf("text %d", i),
-							Actions:       []linebot.TemplateAction{googleAction},
-							DefaultAction: googleAction,
+						flex1 := 1
+						flex5 := 5
+						bubble := &linebot.BubbleContainer{
+							Hero: &linebot.ImageComponent{
+								URL:         "https://lh3.ggpht.com/p/AF1QipMb5o6KHEhTwcPbmquKX3BQg0cCFlM05PAaJ2qS=s1024",
+								Size:        linebot.FlexImageSizeTypeFull,
+								AspectRatio: linebot.FlexImageAspectRatioType20to13,
+								AspectMode:  linebot.FlexImageAspectModeTypeCover,
+							},
+							Body: &linebot.BoxComponent{
+								Layout: linebot.FlexBoxLayoutTypeVertical,
+								Contents: []linebot.FlexComponent{
+									&linebot.TextComponent{
+										Text:   "CJ Express",
+										Weight: linebot.FlexTextWeightTypeBold,
+										Size:   linebot.FlexTextSizeTypeXl,
+									},
+									&linebot.BoxComponent{
+										Layout:  linebot.FlexBoxLayoutTypeVertical,
+										Spacing: linebot.FlexComponentSpacingTypeSm,
+										Contents: []linebot.FlexComponent{
+											&linebot.TextComponent{
+												Text:  "Place",
+												Color: "#aaaaaa",
+												Size:  linebot.FlexTextSizeTypeSm,
+												Flex:  &flex1,
+											},
+											&linebot.TextComponent{
+												Text:   "393 Si Lom, Silom, Bang Rak, Bangkok 10500",
+												Wrap:   true,
+												Color:  "#666666",
+												Weight: linebot.FlexTextWeightTypeBold,
+												Size:   linebot.FlexTextSizeTypeXl,
+												Flex:   &flex5,
+											},
+										},
+									},
+									&linebot.BoxComponent{
+										Layout:  linebot.FlexBoxLayoutTypeBaseline,
+										Spacing: linebot.FlexComponentSpacingTypeSm,
+										Contents: []linebot.FlexComponent{
+											&linebot.TextComponent{
+												Text:  "Time",
+												Color: "#aaaaaa",
+												Size:  linebot.FlexTextSizeTypeSm,
+												Flex:  &flex1,
+											},
+											&linebot.TextComponent{
+												Text:  "9:00 - 18:00",
+												Color: "#666666",
+												Size:  linebot.FlexTextSizeTypeSm,
+												Flex:  &flex5,
+											},
+										},
+									},
+								},
+							},
 						}
-						cols = append(cols, &col)
+						contents = append(contents, bubble)
 					}
-					template := linebot.NewCarouselTemplate(cols...)
-					replyMsg := linebot.NewTemplateMessage("branch", template)
-					if _, err = bot.ReplyMessage(event.ReplyToken, replyMsg).Do(); err != nil {
+					carouselContainer := linebot.CarouselContainer{
+						Type:     linebot.FlexContainerTypeCarousel,
+						Contents: contents,
+					}
+					flex := linebot.NewFlexMessage("alt", &carouselContainer)
+					if _, err = bot.ReplyMessage(event.ReplyToken, flex).Do(); err != nil {
 						log.Print(err)
 					}
 				}
