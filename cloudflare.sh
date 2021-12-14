@@ -1,0 +1,1 @@
+cloudflared tunnel run --url localhost:8080 17fb11e0-c715-40be-bfc0-25f3b394639b
